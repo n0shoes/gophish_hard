@@ -5,11 +5,11 @@ Fork Customisation
 ==================
 
 20/10/2025: Rudimentary support for graphspy device code integration added with Claude Code.  
-  0. If the HTML template contains a {{.DeviceCode}} placeholder:  
-  1. An API call is made to http://127.0.0.1:5000/api/generate_device_code during landing page rendering.
-  2. String replacement replaces any {{.DeviceCode}} placeholder in the landing page HTML with the actual
+  1. If the HTML template contains a {{.DeviceCode}} placeholder:  
+  2. An API call is made to http://127.0.0.1:5000/api/generate_device_code during landing page rendering.
+  3. String replacement replaces any {{.DeviceCode}} placeholder in the landing page HTML with the actual
   response from the API call.
-  3. Template execution proceeds normally with the modified HTML
+  4. Template execution proceeds normally with the modified HTML
 
 Override the default URL for the API call in the config.json property named external_api_url.
 

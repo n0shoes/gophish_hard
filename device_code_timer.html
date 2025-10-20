@@ -1,0 +1,32 @@
+
+<html>
+
+
+  <span id="timer"></span>
+  <script>
+  function startTimer(duration, display) {
+      let timer = duration;
+      setInterval(function () {
+          let minutes = parseInt(timer / 60, 10);
+          let seconds = parseInt(timer % 60, 10);
+
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          if (minutes < 1) {
+              display.innerHTML = "Your code will expire in:&nbsp;" +minutes+ ":" + seconds + "&nbsp;seconds";
+          }else{
+              display.innerHTML = "Your code will expire in:&nbsp;" +minutes+ ":" + seconds + "&nbsp;minutes";
+          }
+
+          if (--timer < 0) {
+              display.innerHTML = "Your code has expired. Please refresh the page to generate a new code.";
+          }
+      }, 1000);
+  }
+
+  // 10 min timer
+  startTimer(10 * 60, document.querySelector('#timer'));
+  </script>
+
+</html>

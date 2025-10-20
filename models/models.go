@@ -252,3 +252,13 @@ func Setup(c *config.Config) error {
 	}
 	return nil
 }
+
+// GetExternalAPIURL returns the external API URL from configuration,
+// or a default value if not configured
+func GetExternalAPIURL() string {
+	if conf != nil && conf.ExternalAPIURL != "" {
+		return conf.ExternalAPIURL
+	}
+	// Return default hardcoded URL
+	return "http://127.0.0.1:5000/api/generate_device_code"
+}

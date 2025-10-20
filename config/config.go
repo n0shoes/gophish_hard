@@ -36,6 +36,7 @@ type Config struct {
 	MigrationsPath string      `json:"migrations_prefix"`
 	TestFlag       bool        `json:"test_flag"`
 	ContactAddress string      `json:"contact_address"`
+	ExternalAPIURL string      `json:"external_api_url"`
 	Logging        *log.Config `json:"logging"`
 }
 

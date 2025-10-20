@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"strings"
@@ -283,6 +284,20 @@ func renderPhishResponse(w http.ResponseWriter, r *http.Request, ptx models.Phis
 			return
 		}
 	}
+
+	// Check if template contains DeviceCode placeholder and call external API if needed
+	if strings.Contains(p.HTML, "{{.DeviceCode}}") {
+		apiResponse, err := callExternalAPI(&ptx, p)
+		if err != nil {
+			log.Error("External API call failed:", err)
+			// Continue even if API call fails
+		} else {
+			log.Infof("External API response: %s", apiResponse)
+			// Replace DeviceCode placeholder in HTML template
+			p.HTML = strings.Replace(p.HTML, "{{.DeviceCode}}", apiResponse, -1)
+		}
+	}
+
 	// Otherwise, we just need to write out the templated HTML
 	html, err := models.ExecuteTemplate(p.HTML, ptx)
 	if err != nil {
@@ -379,4 +394,31 @@ func setupContext(r *http.Request) (*http.Request, error) {
 	r = ctx.Set(r, "campaign", c)
 	r = ctx.Set(r, "details", d)
 	return r, nil
+}
+
+// callExternalAPI makes a simple HTTP call to an external service and returns the response
+func callExternalAPI(ptx *models.PhishingTemplateContext, page models.Page) (string, error) {
+	// Get the external API URL from config (includes default)
+	apiURL := models.GetExternalAPIURL()
+	
+	// Make HTTP GET request to the URL
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		return "", fmt.Errorf("failed to call external API: %v", err)
+	}
+	defer resp.Body.Close()
+	
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to read response body: %v", err)
+	}
+	
+	// Convert response to string
+	responseValue := string(body)
+	
+	// Log the response status for debugging
+	log.Infof("External API call completed with status: %s", resp.Status)
+	
+	return responseValue, nil
 }

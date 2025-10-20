@@ -16,6 +16,7 @@
 	"db_path": "gophish.db",
 	"migrations_prefix": "db/db_",
 	"contact_address": "",
+	"external_api_url": "",
 	"logging": {
 		"filename": "",
 		"level": ""
